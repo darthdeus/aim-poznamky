@@ -1,4 +1,4 @@
-i386, 32b mod, linearni adresy, uzivatelsky mod
+# i386, 32b mod, linearni adresy, uzivatelsky mod
 
 - int 8, 16, 32, (64) ... napr. pri nasobeni dvou 32b cisel muzeme mit 64b vysledek
 - dvojkovy doplnek
@@ -39,5 +39,24 @@ i386, 32b mod, linearni adresy, uzivatelsky mod
 - XMM0 - XMM7 (128b)
 - YMM0 - YMM7 (256b)
 - MXCSR - ridici a stavovy registr pro vektorove registry
+
+Intel: ADD EAX,7
+AT&T:  addl $7,%eax
+
+8  - b
+16 - w
+32 - l
+64 - q
+
+- poradi prirazeni je opacne, dest. je napravo
+- % se pise pred registr, $ pred literal (konstantu zadratovanou do instrukce)
+- $7 je konstanta 7, 7 je reference na obsah pameti na adrese 7 (u intelu se pise [7])
+- explicitni velikost
+
+addl $7,(%eax)
+ADD  DWORD PTR [EAX], 7
+
+4(%eax) - vezmi obsah eax, k nemu pricti 4, a vyjde adresa kde najdes to, s cim se pocita
+4(%eax, %ecx, 2) - pristup na adresu [eax + 2*ecx + 4], hodi se pri adresovani indexem
 
 amd64
