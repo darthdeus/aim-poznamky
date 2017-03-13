@@ -1,0 +1,43 @@
+i386, 32b mod, linearni adresy, uzivatelsky mod
+
+- int 8, 16, 32, (64) ... napr. pri nasobeni dvou 32b cisel muzeme mit 64b vysledek
+- dvojkovy doplnek
+- little endian
+  - 0x12345678 se zapise jako | 78 | 56 | 34 | 12 |
+- float 32(24b mantisa), 64(53), 80(64), [16(11)] jen ve vektorovych
+  instrukcich, hodi se napr na 3d grafiku nebo na zpracovani HDR fotek
+- vektory 128, (256)
+- pamet rozdelena od 0 do 2^32-1 (man 3 mmap, munmap
+
+- EAX |
+- EBX | "universalni"
+- ECX |
+- EDX |
+---------------------
+- ESI | source/dest.
+- EDI |    index
+---------------------
+- EBP - base pointer, zacatek lokalnich promennych
+- ESP - stack pointer, nejnizsi misto v pameti, ktere patri zasobniku (vrchol zasobniku)
+- EIP - instruction pointer, aktualni pozice programu v pameti
+      - behem provadeni instrukce je to adresa odkud se bude nacitat dalsi instrukce
+      - nemusi ani existovat, nic se s nim delat neda
+- EFLAGS - Z: predchozi operace nula (zero), C: preteceni (carry), S: predchozi
+              operace zaporne cislo (sign), D: ovlivnuje, jestli se po pameti chodi popredu
+              nebo pozpatku
+         - nastavuji je bezne instrukce
+         - instrukce podmineneho skoku muzou vyuzit hodnoy flagu
+
+- floatove registry tvori 8-registrovy zasobnik
+- floatovy zasobnik ST(0) ... ST(7)
+- do kazdeho se vejde 80b float
+- indexuji se cyklicky
+- operace ctou prvni operand z ST(0) a druhy odkudkoliv, a zapisou zpatky do ST(0)
+- FPUCR, FPUSR - ridici a stavovy floatovy registr
+               - floatove stavy jsou kumulativni, muzu kontrolovat az po vice operacich
+
+- XMM0 - XMM7 (128b)
+- YMM0 - YMM7 (256b)
+- MXCSR - ridici a stavovy registr pro vektorove registry
+
+amd64
