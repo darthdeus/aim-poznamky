@@ -59,4 +59,59 @@ ADD  DWORD PTR [EAX], 7
 4(%eax) - vezmi obsah eax, k nemu pricti 4, a vyjde adresa kde najdes to, s cim se pocita
 4(%eax, %ecx, 2) - pristup na adresu [eax + 2*ecx + 4], hodi se pri adresovani indexem
 
-amd64
+# ABI (Application Binary Interface) i386, C a Linux
+
+- lisi se architekturou, jazykem a operacnim systemem
+- konvence rika, ze na 0 neni namapovana zadna pamet
+- vsechno co jde, se predava pres zasobnik
+- f(int x, int y)
+  - nejdriv na zasobnik vlozi y
+  - pak na zasobnik vlozi x
+  - predava se po 4B slotech (80b floaty zabiraji 3 sloty)
+- volajici pouziva instrukci call
+  - skoci na adresu podprogramu
+  - na zasobnik vlozi navratovou adresu
+
+
+         |               | |
+         |               | |
+         ----------------- |
+      +12| x             | |
+         ----------------- |
+ulozi +8 | y             | | volajici
+volajici ----------------- |
+ESP ->+4 | navrat adresa | -
+         -----------------
+EBP ->+0 | stare EBP     | -
+         ----------------- |
+         | lokalni       | | volany
+         | promenne      | |
+         ----------------- |
+         | pracovni      | |
+         | prostor       | -
+
+         -----------------
+         | red zone      | na amd64 mame 128b pod stack pointerem, nemusi se hybat stack pointerem
+
+volajici odstranuje argumenty, protoze volany nevi, kolik dostal argumentu (prvni argument je posledni dole)
+
+- pokud je vysledek 32b, vraci se v EAX
+- pokud je vysledek 64b, vraci se v EDX:EAX
+- pokud je to float, vraci se v ST(0)
+- pokud je to struktura, volajici si udela misto na zasobniku, a volany dostane
+  0. argument, kde se preda adresa kam se to ma ulozit
+
+# amd64
+
+      b   w   l   q
+- int 8, 16, 32, 64, (128)
+- pamet je 2^64-1
+- adresy muzou byt zaporne, pokud jsou zaporne tak je to pamet procesoru, kladne adresy jsou uzivatelske
+-      RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP, RIP
+- nebo R0,   R1,  R2,  R3,  R4,  R5,  R6,  R7, ..., R15
+- muzeme psat R8L, R8W, R0H
+- da se relativne adresovat vuci RIP
+
+- XMM0-7 se rozsiruje na XMM15 (stejne tak YMM15)
+
+- leave (odrolovani zasobniku)
