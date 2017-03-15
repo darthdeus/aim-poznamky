@@ -79,3 +79,42 @@ $a.^methods
 # 4
 
 magicka promenna $ je implicitne typu `state`
+
+promenna state vznikne pri vytvoreni lambda funkce, nikoliv pri jejim zavolani
+
+for @a { say $++, $_; }
+
+> dd *+1
+{ ... }
+
+"\x[2661"]" unicode codepoint
+"\x[BLACK HEART]" unicode codepoint by name
+
+Q:s:b[...] interpoluje jenom skalary a escapovatka
+
+Q:to/END/;
+  odsazeny string,
+  ktery je odsazeny na
+  END
+
+> my $x = 42;
+42
+> $x.WHAT
+(Int)
+> $x.VAR.WHAT
+(Scalar)
+
+:= dekontejnerizuje, ale = ne, proto funguje
+
+($a, $b) = (1, 2); # seznamove prirazeni, ktere nedekontejnerizuje
+
+polymorfni objekt?
+<abc def>
+<2/3 def>[0].WHAT
+
+> my @a = 1,2,3;
+> @a[4] = 999
+> @a
+[1 2 3 (Any) 999]
+> @a[*-1]
+999
