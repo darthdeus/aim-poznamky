@@ -1,0 +1,81 @@
+'Brum'
+"Hello, $name"
+"1+1={1+1}"
+
+#`{{
+  multiline komentar
+}}
+
+# int
+
+- 123
+- 1_024
+- 0xbeef
+- :7<123>
+
+- rat: 2.34
+- real: 0e0
+
+$my-name
+
+# sigily:
+
+$ cokoliv
+@ "pole"
+% "slovnik"
+& "funkce"
+
+> &sin.WHAT
+> 5.WHAT
+> sin(5).WHAT
+
+# item assignment vs list assignment (jina priorita operatoru prirazeni)
+
+v pripade `$a = 1,2,3` ma `=` vetsi prioritu nez `,` a tim padem se prvni
+vyhodnoti `$a = 1` a pak `1,2,3`, coz se taky vrati jako hodnota vyrazu
+
+$*IN
+$.jmeno
+$?LINE, $?FILE - promenne prekladace
+$^1 - implicitni parametry funkce
+
+my Int $x = 123;
+my Int:D $x = 123;
+
+temp $*OUT;
+state $a - lexikalne scopovana promenna s zivotnosti okolniho bloku
+
++$a - konverze na cislo
+~$a - konverze na string
+?$a - konverze na bool (jak se lisi od `so`)?
+
+operatory <=>, before, after
+$x max= 10
+
+$x || default
+$x // default
+
+$x //= 'default';
+
+# pokud $x neni definovane, tak se ten blok preskoci
+with $x {
+  .say
+}
+
+onwith
+die without $food;
+
+# adverb
+
+rm "/etc/passwd", :f
+rm "/etc/passwd", f => True
+
+:!verbose
+:level(42)
+:$level == :level($level) == level => $level
+
+$a.^methods
+
+# 4
+
+magicka promenna $ je implicitne typu `state`
