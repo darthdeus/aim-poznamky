@@ -7,7 +7,7 @@
 - float 32(24b mantisa), 64(53), 80(64), [16(11)] jen ve vektorovych
   instrukcich, hodi se napr na 3d grafiku nebo na zpracovani HDR fotek
 - vektory 128, (256)
-- pamet rozdelena od 0 do 2^32-1 (man 3 mmap, munmap
+- pamet rozdelena od 0 do 2^32-1 (man 3 mmap, munmap)
 
 - EAX |
 - EBX | "universalni"
@@ -115,3 +115,90 @@ volajici odstranuje argumenty, protoze volany nevi, kolik dostal argumentu (prvn
 - XMM0-7 se rozsiruje na XMM15 (stejne tak YMM15)
 
 - leave (odrolovani zasobniku)
+
+
+# druhy pameti
+
+- staticka: klopny obvod, rychly, velka bunka (nemuzeme jich mit hodne)
+- dynamicka: jeden kodenzator, ctenim se vybije, musi se znovu nahrat, casem se
+  vybiji (protoze nemame nekonecne velky odpor), tzn. musi se refreshovat
+
+## cache plne asociativni
+
+- [ adresa, data ]
+- radky po 64B [ tag 26b | pos 6b ]
+- cache si pamatuje jenom tagy, tzn. [ tag | data ]
+
+- LRU (Least-Recently Used)
+
+- write-through zapisy
+  - zapisy se zapisuji skrz cache, tzn. je vzdycky koherentni,
+  - zapis ale blokuje nez se zapise do hlavni pameti, tzn je pomalejsi a cache zrychluje jenom cteni
+
+- write-back zapisy
+  - v cache je dirty bit
+
+## primo adresovana cache (directly mapped)
+
+- h(adresa) -> radek
+- 64kB cache s 64B radky -> 1024 radku -> 10b index
+- [ tag | index 10 | pos 6 ]
+
+## k-cestne mnozinove asociativni cache
+
+- h(adresa) -> mnozina s $k$ radky
+- 64kB, 4-cestna, 1024 radku -> 256 mnozin -> index ma 8b
+- [ tag 18b | index 8b | pos 6b ]
+
+## Intel Core 2 Duo
+
+- L1I 32kB 4-cestna
+- L1D 32kB 8-cestna
+- L2   2MB 8-cestna
+
+
+# Memory Management Unit
+
+----        ----
+|  |  MMU   |  |
+|--| -----> |--|
+|  |        |  |
+|--|        |--|
+|  |        |  |
+----        ----
+ VA          PA
+
+stranky 4kB
+
+- [ i1 10 | i2 10 | pos 12 ]
+- registr CR2, ktery odkazuje na koren strankoveho stromu
+- pouzije se prvnich 10b na nalezeni stranky druhe urovne
+  - bud se dalsich 10b pouzije na dalsi uroven strankovaciho stromu,
+    kde se uz najde samotny preklad
+  - nebo se adresuje primo prvni urovni, pak jsou stranky 4MB
+
+# TLB (Translation Look-aside Buffer)
+
+- udrzi si radove stovky prekladu pomoci hornich 20b adresy (dolnich 12b je adresa v ramci stranky)
+- TLB je casto viceurovnove
+
+# virtualne indexovana, fyzicky tagovana
+
+- 32kB 8-cestna
+- 512 radku, 64 mnozin
+- [ tag | idx 6 | pos 6 ]
+- muzu paralelne zadat TLB preklad pomoci hornich 20b a L1D pomoci dolnich 12b
+
+
+# DRAM
+
+- matice, ne pole
+- pamet se cte nejprve do radkoveho bufferu (pak pres PRECHARGE zpatky)
+
+- L1_DTLB_MISS_AND_L2_DTLB_HIT
+
+
+# DU
+
+- na strankach prednasky je ke stazeni program ktery grafy z prednasky
+  generuje, vyzkouset co to dela, zkusit vestit z krivek :)
