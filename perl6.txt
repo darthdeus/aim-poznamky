@@ -118,3 +118,23 @@ polymorfni objekt?
 [1 2 3 (Any) 999]
 > @a[*-1]
 999
+
+# cviceni 5
+
+my @a = 1, 2, 3, 4, 5
+@a.rotor(3, :partial)
+
+my %h = red => 1
+        green => 2;
+
+%h{'red'} = 1;
+%h<green blue>
+
+
+pokud ukladam hash do %h, automaticky mi vznikne hash,
+ale pokud bych pouzil $h, tak to musim udelat explicitne :P
+
+sub pokus { ... } # existuje pry i ??? a !!!
+sub f($x, $y) { return $x + $y; }
+
+sub swap($x is rw, $y is rw) { ($x, $y) = $y, $x }
