@@ -302,3 +302,5 @@ a praci s pameti             - 2*a - bud posun doleva, nebo a+a, nebo 2*a, nebo 
   \   |   /                  - prekladac vi, ktera jednotka umi co, a prelozi to podle potreby :)
    \  |  /                    - napr. pokud to delam 3x, tak to muze udelat tremi zpusoby,
     retire                      aby se vyuzily vsechny jednotky CPU
+
+na hranach jsou fronty a vsechno se bufferuje, pokud reorder napr. nestiha
