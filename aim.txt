@@ -202,3 +202,73 @@ stranky 4kB
 
 - na strankach prednasky je ke stazeni program ktery grafy z prednasky
   generuje, vyzkouset co to dela, zkusit vestit z krivek :)
+
+
+# prednaska 5
+
+- fetch
+- decode - mikro-operace
+- op. fetch
+- compute - vicemene trivialni v porovnani s ostatnimi fazemi :)
+- retire - zapiseme vysledky
+
+- pipelining
+- store forwarding - muze se predat mezivisyledek dalsi instrukci zkratkou
+- latence/propustnost
+
+- superskalarni vyhodnocovani
+- rozklad na mikro-operace
+
+xorl %eax1, %eax1
+movl %eax1, (%edi)
+movl $42, %eax2
+movl %eax2, 4(%edi)
+
+- register rename
+  - procesor ma treba 32 vnitrnich registru, vsechny obecne
+  - udrzuje si tabulku, ktera rika, ktery z registru se jmenuje EAX
+
+- predikce skoku + spekulace
+- u instrukce jde napovidat kam spis skoci (gcckovy __builtin_expect)
+
+predikce
+  - staticka
+    - skoc dozadu vzdy, dopredu nikdy
+    - skok daleko neprojde, skok blizko projde (predpokladame, ze se jedna o osetreni chyby, a pokud nastane, tak mam jine starosti nez predikci :)
+
+  - dynamicka, saturujici citac
+    - BTB = Branch Target Buffer
+    - -k, ..., -1, 1, ..., k
+    - na konci se zastavi a nepreteka
+    - na starem pentiu (SN), (WN), (WT), (ST) ... -2, -1, +1, +2
+    - asociativne se hleda podle adresy skoku, BTB se chova jako cache, tzn. pokud se tam najde tak ma citac, pokud se nanjde tak se cachuje odznova
+
+  - pole citacu
+    - poridime si 2^h citacu
+    - drzime si historii podlednich `h` skoku
+    - pro danou historii bereme citac z pole ktery sedi na bitovou masku historie
+    - dokaze predikovat smycky ktere jdou po 2 nebo 3
+
+    - globalni historie
+      - pamatujeme si napr. poslednich 12 kroku (tj. 2^12 = 4096 citacu)
+
+  - agree prediktor
+    - lokalni citac pro jednotlive skoky
+    - globalni historie, ktera se pouziva pouze na predikci pocatecniho
+    - globalni predikce chyta jenom omyly lokalni predikce
+    - muze se pouzivat napr. hashovaci tabulka, kde pokud nemame zaznam tak predpokladame, ze se lokalni prediktor trefil :)
+
+  - detektor smycek
+    - vyhledava pattern, ktery se chova jako smycka
+    - "tohle je smycka, ktera obvykle povede 4 iterace"
+
+  - zasobnikovy prediktor
+    - udrzuje si treba poslednich 16 navratovych adres
+    - call pridava, ret odebira
+    - neni spolehliva, ale predikuje
+    - zmatou ho napr. coroutiny
+
+  - HYBRIDNI PREDIKTOR
+    - udrzuje si v BTB ktera metoda predikce je na jaky skok uspesna
+
+  - AMD pry pouziva neuronove site na predikci
