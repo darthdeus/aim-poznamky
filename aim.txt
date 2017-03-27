@@ -234,7 +234,7 @@ movl %eax2, 4(%edi)
 predikce
   - staticka
     - skoc dozadu vzdy, dopredu nikdy
-    - skok daleko neprojde, skok blizko projde (predpokladame, ze se jedna o osetreni chyby, a pokud nastane, tak mam jine starosti nez predikci :)
+    - skok daleko neprojde, skok blizko projde (predpokladame, ze se jedna o osetreni chyby, a pokud nastane, tak mam jine starosti nez predikci :))
 
   - dynamicka, saturujici citac
     - BTB = Branch Target Buffer
@@ -272,3 +272,33 @@ predikce
     - udrzuje si v BTB ktera metoda predikce je na jaky skok uspesna
 
   - AMD pry pouziva neuronove site na predikci
+
+# Intel Core2 (puvodne Pentium M)
+
+prediktor
+  |
+  V
+fetch (16B/T)
+  |
+  V
+predecode - urcuje hranici instrukci v ramci 16B okna
+  |
+  V
+decode (3/T)
+  | 3u-op/T
+  V
+rename (64 reg - nejspis)
+  |
+  V
+reorder - ROB (40 polozek, v kazde muze byt jedna u-operace)
+  |     - resi zavislosti
+  V     - dohromady s *reservation station* resi scheduling (na AMD je to jedna jednotka)
+reservation
+  station    - 20 u-ops
+  /   |   \
+ V    V    V
+ruzne jednotky pro pocitani  - bitove posuny o ne-konstantu pry umi jenom jedna jednotka
+a praci s pameti             - 2*a - bud posun doleva, nebo a+a, nebo 2*a, nebo LEA
+  \   |   /                  - prekladac vi, ktera jednotka umi co, a prelozi to podle potreby :)
+   \  |  /                    - napr. pokud to delam 3x, tak to muze udelat tremi zpusoby,
+    retire                      aby se vyuzily vsechny jednotky CPU
