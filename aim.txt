@@ -304,3 +304,24 @@ a praci s pameti             - 2*a - bud posun doleva, nebo a+a, nebo 2*a, nebo 
     retire                      aby se vyuzily vsechny jednotky CPU
 
 na hranach jsou fronty a vsechno se bufferuje, pokud reorder napr. nestiha
+
+# spinlock/libpthread
+
+kernelovy mutex
+futex
+- indexovane fyz. adresou
+- futex_wait(&futex, expected value)
+- futex_wake(&futex, #procesu)
+
+lock:
+if ((c = cmpxchg(f, 0, 1)) != 0) {
+  do { if (c == 0 || cmpxchg(f, 1, 2) != 0)
+         fuex_wait(&f, 0);
+  } while (c = cmpxchg(f, 0, 2));
+}
+
+unlock:
+if (atomic(dec(f) != 1) {
+  f = 0;
+  futex_wake(&f, 1);
+}
