@@ -325,3 +325,11 @@ if (atomic(dec(f) != 1) {
   f = 0;
   futex_wake(&f, 1);
 }
+
+# Transakcni pamet - Intel TSX (Transaction Sync. eXtension)
+
+XSTART addr - adresa v pameti kde sidli kod na selhani transakce
+ |
+XABORT -> muzu si predat vlastni EAX
+ |
+XEND - pokud selze, EAX = kod chyby
