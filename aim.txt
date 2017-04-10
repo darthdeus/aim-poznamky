@@ -333,3 +333,11 @@ XSTART addr - adresa v pameti kde sidli kod na selhani transakce
 XABORT -> muzu si predat vlastni EAX
  |
 XEND - pokud selze, EAX = kod chyby
+
+# modely konzistence
+
+- sequential - ke vsem sequential promennym existuje globalni usporadani
+- relaxed - nesplnuju vubec nic, pristupy k teto bunce pameti muzou byt prerovnane jakkoli (kdyz nic nereknu, promenna je relaxed)
+- acquire - jakoby lock u zamku, cteni nemuze jit pred `lock`   | existuje kombinace
+- release - jakoby unlcok u zamku, zapis nemuze jit za `unlock` | a + r - compare and exchange?
+- consume - jako acquire, ale zakazuje cteni jenom cteni veci, ktere zavisi na tom co bylo precteno
